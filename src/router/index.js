@@ -5,12 +5,11 @@ const routes = [
 	{
 		path: '/login',
 		name: 'Login',
-		component: () => import('@/pages/Login') // 登录页面组件
+		component: () => import('@/pages/Login')
 	},
 	{
 		path: '/',
-		component: () => import('@/pages/Home'), // 主布局组件
-		children: []
+		component: () => import('@/layout/CommonLayout')
 	}
 ];
 
