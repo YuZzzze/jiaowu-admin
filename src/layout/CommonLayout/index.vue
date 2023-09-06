@@ -1,47 +1,45 @@
 <template>
   <div class="flex h-screen">
-    <!-- 侧边栏 -->
-    <el-aside width="250px">
-      <!-- 侧边栏内容 -->
-      <div class="flex flex-col h-full">
-        <!-- Logo -->
-        <div class="py-4 px-6 text-2xl font-semibold border-r">My Admin</div>
-        <!-- 导航菜单 -->
-        <el-menu class="flex-1 h-full overflow-y-auto" :default-active="defaultActive" router>
-          <el-menu-item index="dashboard">仪表盘 </el-menu-item>
-          <el-menu-item index="commodity">二手书管理 </el-menu-item>
-        </el-menu>
-      </div>
-    </el-aside>
-
-    <!-- 内容区域 -->
-    <div class="flex-1 overflow-y-auto">
-      <!-- 头部 -->
-      <el-header class="border">
-        <!-- 头部内容 -->
-
-        <!-- 用户信息和操作 -->
-        <div>aaa</div>
+    <el-container>
+      <el-header class="bg-gray-900 text-white flex items-center" height="48px">
+        <div class="text-lg font-semibold">厂里教务后台</div>
       </el-header>
-
-      <!-- 页面主体内容 -->
-      <el-main class="p-4">
-        <!-- 页面内容 -->
-        <router-view></router-view>
-      </el-main>
-    </div>
+      <el-container>
+        <el-aside width="220px">
+          <!-- 导航菜单 -->
+          <el-menu class="h-full shadow-lg" style="border: none" :default-active="defaultActive" router>
+            <div class="w-full flex flex-col gap-2">
+              <el-menu-item index="/dashboard" style="height: 45px">仪表盘 </el-menu-item>
+              <el-menu-item index="/commodity">二手书管理 </el-menu-item>
+            </div>
+          </el-menu>
+        </el-aside>
+        <!-- 内容区域 -->
+        <div class="flex flex-col flex-1 flex-grow overflow-y-auto bg-gray-100">
+          <!-- 页面主体内容 -->
+          <el-main class="flex-grow">
+            <!-- 页面内容 -->
+            <router-view></router-view>
+          </el-main>
+        </div>
+      </el-container>
+    </el-container>
+    <!-- 侧边栏 -->
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-
-// 默认选中的菜单项
-const defaultActive = ref('dashboard');
+import { useRouter, useRoute } from 'vue-router';
 
 // 路由实例
 const router = useRouter();
+
+const route = useRoute();
+console.log(route);
+
+// 默认选中的菜单项
+const defaultActive = ref(route.path);
 
 // 展开/折叠侧边栏
 const collapseSidebar = () => {
@@ -55,5 +53,11 @@ const toggleSidebar = () => {
 </script>
 
 <style scoped>
-/* 在这里不需要添加额外的样式 */
+.el-menu-item {
+  height: 45px;
+}
+.el-menu-item.is-active {
+  background-color: rgb(230, 247, 255) !important;
+  border-right: 3px solid rgb(24, 144, 255);
+}
 </style>
