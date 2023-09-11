@@ -23,6 +23,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { login } from '../../api/user';
+import { setToken } from '../../utils/token';
 
 const loginForm = ref({
   account: '',
@@ -34,7 +35,7 @@ const router = useRouter();
 const onLogin = async () => {
   const result = await login(loginForm.value);
   if (!!result) {
-    localStorage.setItem('token', result);
+    setToken(result);
     router.replace('/');
   }
 };
