@@ -14,8 +14,8 @@ instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
     if (!config.headers.notoken) {
-      const token = localStorage.getItem('token');
-      config.headers.token = token;
+      const token = JSON.parse(localStorage.getItem('token'));
+      config.headers.token = token.value;
     }
     return config;
   },
