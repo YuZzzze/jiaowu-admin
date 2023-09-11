@@ -19,6 +19,10 @@ const routes = [
       {
         path: 'commodity',
         component: () => import('@/pages/Commodity')
+      },
+      {
+        path: '/commodity/:action',
+        component: () => import('@/pages/Commodity/Detail')
       }
     ]
   }

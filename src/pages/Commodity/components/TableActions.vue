@@ -15,7 +15,9 @@
       </el-input>
     </div>
 
-    <el-button type="primary">新增商品</el-button>
+    <router-link to="/commodity/create">
+      <el-button type="primary">新增商品</el-button>
+    </router-link>
   </div>
 </template>
 

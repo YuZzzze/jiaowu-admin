@@ -8,6 +8,12 @@
       <el-table-column prop="originalCost" label="原价(元)" />
       <el-table-column prop="currentCost" label="现价(元)" />
       <el-table-column prop="writer" label="版本" />
+      <el-table-column prop="actions" label="操作">
+        <template #default="scope">
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       class="py-3"
@@ -31,11 +37,17 @@ const tableData = ref([]);
 const currentPage = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
+const loading = ref(false);
 
 const getCommodityList = async () => {
-  const data = await fetchCommodityList({ start: currentPage.value, limit: pageSize.value, options: {} });
-  tableData.value = data;
-  total.value = data.total;
+  try {
+    loading.value = true;
+    const data = await fetchCommodityList({ start: currentPage.value, limit: pageSize.value, options: {} });
+    tableData.value = data;
+    total.value = data.total;
+  } finally {
+    loading.value = false;
+  }
 };
 
 // 处理页码变化
