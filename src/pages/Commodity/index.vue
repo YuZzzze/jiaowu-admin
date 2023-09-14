@@ -28,21 +28,40 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import PageContainer from '@/components/PageContainer';
 import TableActions from './components/TableActions.vue';
+import { useCommodityStore } from '@/stores/commodity.js';
 import { fetchCommodityList } from '../../api/commodity';
 
 const tableData = ref([]);
 const currentPage = ref(1);
-const pageSize = ref(10);
+const pageSize = ref(15);
 const total = ref(0);
 const loading = ref(false);
+const commodityStore = useCommodityStore();
+
+// 监听搜索
+watch(
+  () => commodityStore.shouldRefresh,
+  (cur, pre) => {
+    if (commodityStore.shouldRefresh) {
+      console.log(commodityStore.searchOptions, 111);
+      getCommodityList();
+      commodityStore.changeShouldRefresh(false);
+      console.log(commodityStore.searchOptions, 222);
+    }
+  }
+);
 
 const getCommodityList = async () => {
+  const options = {};
+  options[commodityStore.searchOptions.select] = commodityStore.searchOptions.search;
+  console.log(options, 666);
   try {
     loading.value = true;
-    const data = await fetchCommodityList({ start: currentPage.value, limit: pageSize.value, options: {} });
+    const data = await fetchCommodityList({ start: currentPage.value, limit: pageSize.value, options });
+    console.log(data);
     tableData.value = data;
     total.value = data.total;
   } finally {
