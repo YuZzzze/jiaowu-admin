@@ -21,6 +21,10 @@ instance.interceptors.request.use(
   },
   function (error) {
     // 对请求错误做些什么
+    ElMessage({
+      message: error.message,
+      type: 'error'
+    });
     console.error(error.message);
     return Promise.reject(error);
   }
