@@ -22,3 +22,18 @@ export const createCommodity = async (params) => {
     type: 'error'
   });
 };
+
+export const deleteCommodity = async (params) => {
+  const result = await request.post('/commodity/deleteCommodity', params);
+  if (result.code === 20000) {
+    ElMessage({
+      message: '删除成功！',
+      type: 'success'
+    });
+    return true;
+  }
+  ElMessage({
+    message: '删除失败！',
+    type: 'error'
+  });
+};

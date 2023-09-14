@@ -10,8 +10,8 @@
       <el-table-column prop="writer" label="版本" />
       <el-table-column prop="actions" label="操作">
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="small" type="danger" @click="toggleDelete(scope)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -24,6 +24,15 @@
       :hide-on-single-page="true"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"></el-pagination>
+    <el-dialog v-model="deleteDialogVisible" title="提示" width="30%" center>
+      <span>确定要删除该商品吗 </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="deleteDialogVisible = false">取消</el-button>
+          <el-button type="danger" @click="handleDelete(currentId)"> 确定 </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </PageContainer>
 </template>
 
@@ -32,14 +41,16 @@ import { ref, onMounted, watch } from 'vue';
 import PageContainer from '@/components/PageContainer';
 import TableActions from './components/TableActions.vue';
 import { useCommodityStore } from '@/stores/commodity.js';
-import { fetchCommodityList } from '../../api/commodity';
+import { fetchCommodityList, deleteCommodity } from '../../api/commodity';
 
 const tableData = ref([]);
 const currentPage = ref(1);
 const pageSize = ref(15);
 const total = ref(0);
 const loading = ref(false);
+const deleteDialogVisible = ref(false);
 const commodityStore = useCommodityStore();
+const currentId = ref('');
 
 // 监听搜索
 watch(
@@ -57,11 +68,10 @@ watch(
 const getCommodityList = async () => {
   const options = {};
   options[commodityStore.searchOptions.select] = commodityStore.searchOptions.search;
-  console.log(options, 666);
+
   try {
     loading.value = true;
     const data = await fetchCommodityList({ start: currentPage.value, limit: pageSize.value, options });
-    console.log(data);
     tableData.value = data;
     total.value = data.total;
   } finally {
@@ -79,6 +89,19 @@ const handleCurrentChange = (newPage) => {
 const handleSizeChange = (newSize) => {
   pageSize.value = newSize;
   getCommodityList();
+};
+
+const toggleDelete = (scope) => {
+  deleteDialogVisible.value = true;
+  currentId.value = scope.row.id;
+};
+
+const handleDelete = async (id) => {
+  const result = await deleteCommodity({ id });
+  if (result) {
+    getCommodityList();
+  }
+  deleteDialogVisible = false;
 };
 
 onMounted(() => {
