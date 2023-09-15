@@ -101,7 +101,7 @@ const handleDelete = async (id) => {
   if (result) {
     getCommodityList();
   }
-  deleteDialogVisible = false;
+  deleteDialogVisible.value = false;
 };
 
 onMounted(() => {
